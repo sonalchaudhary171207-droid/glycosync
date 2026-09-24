@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: glycosync_mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: glycosync_db
+      MYSQL_USER: glycosync_user
+      MYSQL_PASSWORD: glycosync_pass
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  redis:
+    image: redis:7-alpine
+    container_name: glycosync_redis
+    ports:
+      - "6379:6379"
+
+  backend:
+    build: ./backend
+    container_name: glycosync_django
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - ./backend:/app
+    ports:
+      - "8000:8000"
+    environment:
+      - MYSQL_HOST=db
+      - MYSQL_DATABASE=glycosync_db
+      - MYSQL_USER=glycosync_user
+      - MYSQL_PASSWORD=glycosync_pass
+    depends_on:
+      - db
+      - redis
+
+volumes:
+  mysql_data:
