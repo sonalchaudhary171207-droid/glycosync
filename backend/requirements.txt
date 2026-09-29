@@ -1,8 +1,7 @@
-django>=4.2,<5.0
-djangorestframework>=3.14.0
-django-cors-headers>=4.0.0
-mysqlclient>=2.2.0
-gunicorn>=20.1.0
-dj-database-url>=2.0.0
-python-dotenv>=1.0.0
-whitenoise>=6.5.0
+Set-Content backend/requirements.txt @"
+django
+djangorestframework
+django-cors-headers
+gunicorn
+psycopg2-binary
+"@
